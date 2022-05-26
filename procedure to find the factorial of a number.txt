@@ -1,0 +1,26 @@
+# Unnyan Sharma
+# 2021CSM1009
+
+addi x10 x0 6 # Number to find factorial is stored in x10
+jal ra fact # factorial function is called with return address stored in ra
+beq x0 x0 exit
+
+fact:
+addi sp sp -8 # Stack Pointer dectremented to make space for storing number and return address
+sw ra 8(sp) # return address is stored in stack
+sw x10 4(sp) # number is stored in stack
+addi t0 x0 1 # Base case is when number is 1
+beq x10 t0 first # if it is the base case then goto first
+
+addi x10 x10 -1 
+jal ra fact
+addi x6 x10 0 # value of number of this iteration is saved in x6
+lw x10 4(sp) # number saved in stack is retrieved
+lw ra 8(sp)
+addi sp sp 8 # stack pointer is incremented to it's previous value
+mul x10 x10 x6 # factorial is calculated and stored in x10
+jalr x0 ra 0
+first: # base case function
+sw t0 4(sp)
+jalr x0 ra 0
+exit:

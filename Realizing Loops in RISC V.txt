@@ -1,0 +1,33 @@
+# Unnyan Sharma
+# 2021CSM1009
+
+.data
+location: .word 0x10001000 # address where elements of array are to be stored
+array: .word 1 2 3 4 5 -6 -7 -8 -9 -10 # array used to store elements
+size: .byte 10 # size of array
+.text
+la x5 array # address of array is stored in x5
+lb x11 size # size of array stored in x11
+lw x9 location # location of storage of array is stored in x9
+add x1 x0 x0 # counter to count number of elements traversed
+
+store: # function to store elements on location storeaddr
+bge x1 x11 ADDR # if all elements are traversed then goto ADDR to perform addition of all elements
+lw x7 0(x5) 
+sw x7 0(x9)
+addi x5 x5 4
+addi x9 x9 4
+addi x1 x1 1
+jal x0 store
+ADDR: # function to add the elemnts of array
+addi x8 x0 0
+lw x9 location
+addi x10 x0 0
+forloop:
+bge x8 x11 end
+lw x7 0(x9)
+add x10 x10 x7 # Final sum is stored in x10
+addi x9 x9 4
+addi x8 x8 1
+jal x0 forloop
+end:

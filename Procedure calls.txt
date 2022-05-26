@@ -1,0 +1,63 @@
+#Unnyan Sharma
+#2021CSM1009
+.data
+sequence: .word 'E' 20 'E' 12 'E' 9 'D' 'D' 'S' 'E' 23 #Sequence of operations
+storeaddr: .word 0x10001000 #Address where queue starts
+size: .byte 11 #Number of elements in sequence of operations
+sizestore: .word 0x10005000 #Address where size of queue is stored
+
+.text
+la x5 sequence
+lw x12 storeaddr
+lw x13 storeaddr
+lw x17 sizestore
+lb x7 size
+addi x6 x6 69
+addi x8 x8 68
+addi x9 x9 83
+add x1 x0 x0
+L1:
+bge x1 x7 End
+addi x1 x1 1
+lw x11 0(x5)
+beq x11 x6 E #Comparision of element with 'E' to start enqueue operation
+beq x11 x8 D #Comparision of element with 'D' to start dequeue operation
+beq x11 x9 S #Comparision of element with 'S' to start Find Size operation
+addi x5 x5 4
+beq x0 x0 L1
+E:           #Enqueue operation starts here
+addi x5 x5 4
+lw x11 0(x5)
+sw x11 0(x13)
+addi x13 x13 4
+addi x5 x5 4
+addi x1 x1 1
+beq x0 x0 L1
+
+D:           #Dequeue operation starts here
+addi x13 x13 -4
+sw x0 0(x12)
+lw x18 storeaddr
+addi x19 x18 4
+For:
+lw x20 0(x19)
+sw x20 0(x18)
+addi x18 x18 4
+addi x19 x19 4
+blt x18 x13 For
+sw x0 0(x13)
+addi x5 x5 4
+beq x0 x0 L1
+
+
+S:            #Find Size operation starts here
+sub x15 x13 x12
+addi x16 x0 4
+div x15 x15 x16
+sw x15 0(x17)
+addi x5 x5 4
+beq x0 x0 L1
+
+
+End:
+

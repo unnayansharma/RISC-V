@@ -1,0 +1,38 @@
+#Unnyan Sharma
+#2021CSM1009
+.data
+array1: .word 1 4 5 
+array2: .word 2 3 6 
+size1: .byte 3 #size of array 1
+size2: .byte 3 #size of array 2
+storeaddr: .word 0x10001000 #address where merged array will be stored
+
+.text
+la x5 array1
+la x6 array2
+lb x7 size1
+lb x8 size2
+lw x13 storeaddr
+add x9 x7 x8 #final size of merged array
+add x1 x0 x0
+for:
+bge x1 x9 End #if size reaches to it's maximum value then EXIT 
+addi x1 x1 1
+lw x11 0(x5) #storing element of array1 in x11
+lw x12 0(x6) #storing element of array2 in x12
+beq x7 x0 L2
+beq x8 x0 L1
+bge x11 x12 L2 #comparing element of array1 and array2
+L1:#if array2 element is greater than array1 element
+addi x7 x7 -1
+sw x11 0(x13)
+addi x13 x13 4
+addi x5 x5 4
+beq x0 x0 for
+L2:#if array1 element is greater than array2 element
+addi x8 x8 -1
+sw x12 0(x13)
+addi x13 x13 4
+addi x6 x6 4
+beq x0 x0 for
+End:

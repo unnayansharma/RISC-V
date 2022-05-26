@@ -1,0 +1,71 @@
+# Unnyan Sharma
+# 2021CSM1009
+.data
+location: .word 0x10001000 # Location to store array in memory
+array: .word 3 2 5 4 7 1 8 6 # given array to sort
+size: .byte 8 # size of array
+targetaddress: .word 0x10002000 # target address where the sorted array is stored
+.text
+la x5 array # address of array is stored in x5
+lb x11 size # size of array is stored in x11
+lw x9 location  # address of location to store array is stored in x9
+lw x20 targetaddress # target address is stored in x20
+add x1 x0 x0
+
+for:bge x1 x11 end1 # loop for storing array at location
+lw x7 0(x5)
+sw x7 0(x9)
+addi x5 x5 4
+addi x9 x9 4
+addi x1 x1 1
+jal x10 for
+
+end1:
+lw x9 location
+add x1 x0 x0
+for3: # array is copied to target address for sorting 
+bge x1 x11 SelectionSort
+lw x7 0(x9)
+sw x7 0(x20)
+addi x9 x9 4
+addi x20 x20 4
+addi x1 x1 1
+jal x10 for3
+
+SelectionSort: # Selection Sort starts from here
+lw x20 targetaddress
+add x1 x0 x0
+addi x2 x0 0
+addi x7 x11 -1
+for1: # Outer loop to move one by one on each element of unsorted array
+bge x2 x7 e1
+add x19 x2 x0
+addi x2 x2 1 # counter incremented by 1
+add x12 x0 x19 # x12 stores the index of minimum element
+addi x13 x19 1
+for2: # loop to set the minimum element index
+bge x13 x11 Swap
+slli x14 x13 2
+add x15 x14 x20
+lw x15 0(x15)
+slli x14 x12 2
+add x16 x14 x20
+lw x16 0(x16)
+blt x15 x16 minindex # if next element is minimum then goto minindex
+Return:
+addi x13 x13 1
+beq x0 x0 for2
+Swap: # swapping of current element and minimum element
+slli x14 x19 2
+add x15 x14 x20
+lw x18 0(x15)
+slli x14 x12 2
+add x16 x14 x20
+lw x17 0(x16)
+sw x18 0(x16)
+sw x17 0(x15)
+beq x0 x0 for1
+minindex:
+add x12 x13 x0 # sets index of minimum element in x12
+beq x0 x0 Return
+e1:

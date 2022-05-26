@@ -1,0 +1,26 @@
+#Unnyan Sharma
+#2021CSM1009
+
+.data
+n: .word 0x12345678
+
+.text
+lb x3 n # x3 stores 0x78 in Little Endian and 0x12 in Big Endian machine
+lw x10 n 
+srli x10 x10 24 # x10 stores 0x12 
+beq x3 x10 L # This line will be true in Big Endian and False in Little Endian
+addi x5 x0 0 # If Little Endian, store 0 in x5
+beq x0 x0 EXIT
+L:
+addi x5 x0 1 # If Big Endian, store 1 in x5
+EXIT:
+
+
+
+
+
+
+
+
+
+
